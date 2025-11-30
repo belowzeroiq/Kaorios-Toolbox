@@ -83,6 +83,17 @@ main() {
     # Recompile framework.jar
     recompile_jar "$framework_path"
 
+    # Optimize with D8
+    # Ensure tools are available (including D8)
+    ensure_tools
+
+    local patched_jar="${framework_path%.*}_patched.jar"
+    if [ -f "$patched_jar" ]; then
+        d8_optimize_jar "$patched_jar"
+    else
+        echo "❌ Error: Patched JAR not found at $patched_jar"
+    fi
+
     # Clean up
     rm -rf "$decompile_dir"
 
